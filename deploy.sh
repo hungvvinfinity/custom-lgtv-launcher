@@ -92,26 +92,45 @@ LAUNCH_RESP=$(ssh -p "$TV_PORT" -i "$SSH_KEY" -o StrictHostKeyChecking=no root@"
 echo "$LAUNCH_RESP"
 
 echo "================================================================="
-echo "==> [6/6] Cấu hình Autostart on Boot và Phím Home..."
+echo "==> [6/6] Cấu hình Autostart on Boot, Standby Watcher và Phím Home..."
 echo "================================================================="
-ssh -p "$TV_PORT" -i "$SSH_KEY" -o StrictHostKeyChecking=no root@"$TV_IP" "
-  mkdir -p /var/lib/webosbrew/init.d /home/root/.config/lginputhook
-  cat << 'EOF' > /var/lib/webosbrew/init.d/50-autostart-launcher.sh
-#!/bin/sh
-(
-  sleep 5
-  luna-send -n 1 luna://com.webos.applicationManager/launch '{\"id\":\"${APP_ID}\",\"keepAlive\":true}'
-) &
-EOF
-  chmod 755 /var/lib/webosbrew/init.d/50-autostart-launcher.sh
-  ln -sf 50-autostart-launcher.sh /var/lib/webosbrew/init.d/50-autostart-launcher
+# Copy autostart watcher script
+scp -P "$TV_PORT" -i "$SSH_KEY" -o StrictHostKeyChecking=no \
+  ./src/tools/50-autostart-launcher root@"${TV_IP}":/var/lib/webosbrew/init.d/50-autostart-launcher
 
+ssh -p "$TV_PORT" -i "$SSH_KEY" -o StrictHostKeyChecking=no root@"$TV_IP" "
+  chmod 755 /var/lib/webosbrew/init.d/50-autostart-launcher
+  rm -f /var/lib/webosbrew/init.d/50-autostart-launcher.sh
+  rm -f /var/lib/webosbrew/init.d/45-launcher-poweron /var/lib/webosbrew/init.d/49-launcher-screensaver 2>/dev/null || true
+
+  # Start autostart daemon immediately if not running
+  pgrep -f '50-autostart-launcher' >/dev/null || (/var/lib/webosbrew/init.d/50-autostart-launcher &)
+
+  # Cấu hình phím Home Magic Remote
+  mkdir -p /home/root/.config/lginputhook
   cat << 'EOF' > /home/root/.config/lginputhook/keybinds.json
 {\"773\":{\"action\":\"launch\",\"id\":\"${APP_ID}\"},\"774\":{\"action\":\"launch\",\"id\":\"${APP_ID}\"},\"125\":{\"action\":\"launch\",\"id\":\"${APP_ID}\"}}
 EOF
   [ -f /media/developer/launcher-homekey/homehook.sh ] && sed -i 's/LAUNCHER_ID=\".*\"/LAUNCHER_ID=\"${APP_ID}\"/g' /media/developer/launcher-homekey/homehook.sh || true
-  [ -f /media/developer/launcher-homehook/apply.sh ] && sed -i 's/tld.my.customlauncher/${APP_ID}/g' /media/developer/launcher-homehook/apply.sh || true
-  [ -f /media/developer/launcher-homehook/watch.sh ] && sed -i 's/tld.my.customlauncher/${APP_ID}/g' /media/developer/launcher-homehook/watch.sh || true
+
+  # Cập nhật bootd.json để bootd natively khởi chạy Custom Launcher
+  node -e '
+    var fs = require(\"fs\");
+    var file = \"/var/luna/preferences/bootd.json\";
+    try {
+      var data = JSON.parse(fs.readFileSync(file, \"utf8\"));
+      data.common.firstApp = data.common.firstApp || {};
+      data.common.firstApp.firstAppInNormal = \"${APP_ID}\";
+      data.common.firstApp.firstAppInHome = \"${APP_ID}\";
+      data.common.firstApp.firstAppInNmrm = \"${APP_ID}\";
+      data.common.firstAppByPowerOnReason = data.common.firstAppByPowerOnReason || {};
+      data.common.firstAppByPowerOnReason.remoteKey = \"${APP_ID}\";
+      data.common.firstAppByPowerOnReason.localKey = \"${APP_ID}\";
+      data.common.firstAppByPowerOnReason.upDownKey = \"${APP_ID}\";
+      data.common.firstAppByPowerOnReason.micomPower = \"${APP_ID}\";
+      fs.writeFileSync(file, JSON.stringify(data, null, 4));
+    } catch(e) {}
+  ' 2>/dev/null || true
 "
 
 echo "================================================================="
