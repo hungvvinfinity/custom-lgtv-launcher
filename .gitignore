@@ -1,0 +1,42 @@
+# Keys, secrets, credentials
+*.key
+*.pem
+*.crt
+*.cert
+*.pfx
+*.p12
+*.id_rsa*
+*.id_ed25519*
+*.env
+*.env.*
+*.token
+*.secret
+tv-ssh.sh
+
+# Exploit / sub-repository with sensitive TV keys
+slopbro/
+
+# Build artifacts & packages
+*.ipk
+
+# Development screenshots & screen captures
+shot_*.png
+shot*.png
+current_screen.png
+
+# Python cache & temp files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs & temp files
+*.log
+*.tmp
+*.bak
+*~
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

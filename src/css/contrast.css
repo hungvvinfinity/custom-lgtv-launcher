@@ -1,0 +1,86 @@
+/* ==========================================================================
+   Contrast Protection & Glassmorphism (Chromium 79 Compatible)
+   Strictly NO 'inset: 0' (use top: 0; left: 0; right: 0; bottom: 0;)
+   Strictly NO ':has()' selector
+   ========================================================================== */
+
+/* 1. Multi-Layer Anti-Glare & Contrast Protection Scrims */
+.scrim-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 1920px;
+  height: 1080px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Base Ambient Dimmer: Softens blinding whites & eliminates eye strain */
+.scrim-dimmer {
+  background: rgba(4, 8, 18, 0.48);
+}
+
+/* Cinematic Radial Vignette: Smooth edge falloff */
+.scrim-vignette {
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(2, 4, 10, 0.12) 0%,
+    rgba(2, 4, 10, 0.45) 65%,
+    rgba(1, 2, 8, 0.85) 100%
+  );
+}
+
+/* Header & Bottom Shelf Gradient Protection */
+.scrim-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(4, 6, 14, 0.80) 0%,
+    rgba(4, 6, 14, 0.38) 18%,
+    rgba(4, 6, 14, 0.12) 42%,
+    rgba(4, 6, 14, 0.28) 65%,
+    rgba(4, 6, 14, 0.76) 84%,
+    rgba(2, 4, 10, 0.96) 100%
+  );
+}
+
+/* 2. Multi-Layer Frosted Glass (Glassmorphism) with Solid Fallback */
+.frosted-glass {
+  background-color: rgba(18, 22, 36, 0.85); /* Solid fallback */
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+@supports ((-webkit-backdrop-filter: blur(16px)) or (backdrop-filter: blur(16px))) {
+  .frosted-glass {
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+}
+
+/* 3. Deep 3D Text-Shadow Protection (10-Foot Sofa Readability) */
+.clock-time,
+.clock-date,
+.weather-temp,
+.weather-location,
+.weather-desc,
+.tomorrow-max,
+.tomorrow-min,
+.weather-tomorrow-desc,
+.home-row-label,
+.app-tile-title,
+.drawer-title {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95),
+               0 1px 3px rgba(0, 0, 0, 0.85),
+               0 0 1px rgba(0, 0, 0, 0.7);
+}
+
+/* Accent texts with glowing ambient shadow */
+.weather-location,
+.drawer-trigger .app-tile-title,
+.home-row-label,
+.weather-tomorrow-badge,
+.tomorrow-min {
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.5),
+               0 2px 8px rgba(0, 0, 0, 0.95);
+}

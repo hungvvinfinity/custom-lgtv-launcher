@@ -1,0 +1,321 @@
+/* ==========================================================================
+   Navigation, Focus States & Modal Drawer (Chromium 79 Compatible)
+   Strictly NO 'inset: 0' (use top: 0; left: 0; right: 0; bottom: 0;)
+   Strictly NO ':has()' selector
+   ========================================================================== */
+
+/* ==========================================================================
+   Focus & Hover Styles (D-pad & Magic Remote Pointer)
+   ========================================================================== */
+.app-tile:focus,
+.app-tile.focused {
+  transform: scale(1.08) translateZ(0);
+  border-color: #00F0FF;
+  background: linear-gradient(180deg, rgba(32, 40, 62, 0.95) 0%, rgba(18, 22, 38, 0.95) 100%);
+  box-shadow: 0 0 0 2px #00F0FF,
+              0 18px 45px rgba(0, 240, 255, 0.45),
+              0 0 65px rgba(0, 240, 255, 0.25),
+              inset 0 1.5px 2px rgba(255, 255, 255, 0.65),
+              inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+  z-index: 25;
+}
+
+.app-tile:focus .app-tile-icon-wrapper,
+.app-tile.focused .app-tile-icon-wrapper {
+  background: rgba(0, 240, 255, 0.16);
+  border-color: rgba(0, 240, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35);
+  transform: scale(1.02);
+}
+
+.app-tile:focus .app-tile-title,
+.app-tile.focused .app-tile-title {
+  color: #FFFFFF;
+  text-shadow: 0 0 14px rgba(0, 240, 255, 0.8),
+               0 2px 8px rgba(0, 0, 0, 0.95);
+}
+
+/* Specific Focus for Holographic 'All Apps' Trigger */
+.app-tile.drawer-trigger:focus,
+.app-tile.drawer-trigger.focused {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.30) 0%, rgba(139, 92, 246, 0.30) 50%, rgba(20, 26, 48, 0.96) 100%);
+  border-color: #00F0FF;
+  box-shadow: 0 0 0 2px #00F0FF,
+              0 18px 50px rgba(0, 240, 255, 0.5),
+              0 0 80px rgba(139, 92, 246, 0.35),
+              inset 0 1.5px 2px rgba(255, 255, 255, 0.7);
+}
+
+.drawer-trigger:focus .holo-icon,
+.drawer-trigger.focused .holo-icon {
+  filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.95));
+}
+
+/* Mouse Hover for Magic Pointer */
+@media (hover: hover) {
+  .app-tile:hover {
+    transform: scale(1.05) translateZ(0);
+    border-color: rgba(0, 240, 255, 0.7);
+    box-shadow: 0 12px 30px rgba(0, 240, 255, 0.35);
+    z-index: 15;
+  }
+}
+
+/* ==========================================================================
+   Luxury Metallic Gold / Cyan Pin Badge
+   ========================================================================== */
+.pin-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(14, 18, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.pin-badge svg {
+  width: 16px;
+  height: 16px;
+  fill: rgba(255, 255, 255, 0.7);
+}
+
+.pin-badge.pinned {
+  opacity: 1;
+  background: linear-gradient(135deg, #FFE259 0%, #FFA751 100%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 16px rgba(255, 180, 0, 0.65),
+              inset 0 1px 1px #FFFFFF;
+  transform: scale(1.05);
+}
+
+.pin-badge.pinned svg {
+  fill: #1A120B;
+  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.35));
+}
+
+.drawer-grid .app-tile:focus .pin-badge,
+.drawer-grid .app-tile.focused .pin-badge,
+.drawer-grid .app-tile:hover .pin-badge {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Modal All Apps Drawer (Deep Blur + Scrim Backdrop)
+   ========================================================================== */
+.drawer-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 1920px;
+  height: 1080px;
+  background: rgba(4, 6, 14, 0.88);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 80px 36px 80px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.drawer-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Drawer Header */
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.drawer-title-group {
+  display: flex;
+  align-items: baseline;
+}
+
+.drawer-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.5px;
+  margin-right: 18px; /* Chromium 79 flex gap fallback */
+}
+
+.drawer-subtitle {
+  font-size: 17px;
+  color: var(--color-text-muted);
+}
+
+.drawer-instructions {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: var(--color-text-secondary);
+}
+
+.key-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.drawer-close-btn {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 12px;
+  padding: 10px 22px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn:focus,
+.drawer-close-btn.focused,
+.drawer-close-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: #00F0FF;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+}
+
+/* Drawer Grid Container */
+.drawer-grid-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 4px 20px 4px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 240, 255, 0.4) transparent;
+}
+
+.drawer-grid-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.drawer-grid-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.35);
+  border-radius: 4px;
+}
+
+/* 5 Columns Balanced Grid for All Apps */
+.drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 28px;
+  gap: 28px;
+}
+
+.drawer-grid .app-tile {
+  width: 100%;
+  height: 210px;
+  border-radius: 20px;
+  margin-right: 0; /* in grid layout, gap handles spacing */
+}
+
+.drawer-grid .app-tile-icon-wrapper {
+  width: 114px;
+  height: 114px;
+  margin-bottom: 8px;
+}
+
+.drawer-grid .app-tile-title {
+  font-size: 19px;
+  font-weight: 700;
+}
+
+/* Floating Remote Hints Bar at Drawer Bottom */
+.drawer-hints-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  background: rgba(20, 24, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.drawer-hint-item {
+  display: flex;
+  align-items: center;
+  margin-right: 28px; /* Chromium 79 flex gap fallback */
+}
+
+.drawer-hint-item:last-child {
+  margin-right: 0;
+}
+
+.key-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-right: 8px; /* Chromium 79 flex gap fallback */
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+.key-pill.key-ok {
+  background: rgba(0, 240, 255, 0.2);
+  border-color: #00F0FF;
+  color: #00F0FF;
+}
+
+.key-pill.key-hold {
+  background: rgba(255, 180, 0, 0.2);
+  border-color: #FFA751;
+  color: #FFE259;
+}
+
+.key-pill.key-back {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+}
+
+.key-pill.key-nav {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 2px;
+}
+
+.hint-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,69 @@
+/* ==========================================================================
+   Weather Background & Dynamic Theme (Chromium 79 Compatible)
+   Strictly NO 'inset: 0' (use top: 0; left: 0; right: 0; bottom: 0;)
+   Strictly NO ':has()' selector
+   ========================================================================== */
+
+/* Background Container & Layers */
+.bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  z-index: 1;
+  background-color: #08090E;
+}
+
+/* 2 Stacked Layers for Smooth 1.2s Crossfade */
+.bg-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.2s ease-in-out;
+  will-change: opacity;
+}
+
+.bg-layer.active {
+  opacity: 1;
+}
+
+/* 7 static WebP backgrounds: 6 weather themes and the default fallback */
+.bg-theme-clear-day {
+  background-image: url('../assets/backgrounds/clear-day.webp');
+}
+
+.bg-theme-clear-night {
+  background-image: url('../assets/backgrounds/clear-night.webp');
+}
+
+.bg-theme-cloudy-day {
+  background-image: url('../assets/backgrounds/cloudy-day.webp');
+}
+
+.bg-theme-cloudy-night {
+  background-image: url('../assets/backgrounds/cloudy-night.webp');
+}
+
+.bg-theme-rain {
+  background-image: url('../assets/backgrounds/rain.webp');
+}
+
+.bg-theme-storm {
+  background-image: url('../assets/backgrounds/storm.webp');
+}
+
+.bg-theme-default {
+  background-image: url('../assets/backgrounds/default.webp');
+}

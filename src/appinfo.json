@@ -1,0 +1,21 @@
+{
+  "id": "vn.hungvu.tvlauncher",
+  "version": "1.0.0",
+  "vendor": "HungVu",
+  "type": "web",
+  "main": "index.html",
+  "title": "Home Launcher",
+  "appDescription": "Custom TV Launcher for LG webOS TV",
+  "icon": "assets/icon.png",
+  "largeIcon": "assets/largeIcon.png",
+  "iconColor": "#0a0a0f",
+  "bgColor": "#000000",
+  "disableBackHistoryAPI": true,
+  "transparent": false,
+  "splashBackground": "assets/splash.png",
+  "requiredMemory": 15,
+  "supportGIP": true,
+  "handlesRelaunch": true,
+  "resolution": "1920x1080",
+  "requiredPermissions": ["all"]
+}

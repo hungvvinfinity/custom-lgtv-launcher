@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Helper script to execute commands on the LG webOS TV (Example template)
+TV_IP="${TV_IP:-192.168.1.139}"
+TV_PORT="${TV_PORT:-9922}"
+SSH_KEY="/tmp/tv_key"
+
+# If decrypting a passphrase-protected key, replace <PASSPHRASE> and key path
+if [ ! -f "$SSH_KEY" ]; then
+    # openssl rsa -in ~/.ssh/tv_private_key -passin pass:YOUR_PASSPHRASE -out "$SSH_KEY" 2>/dev/null
+    # chmod 600 "$SSH_KEY"
+    echo "Please set up your decrypted key at $SSH_KEY"
+fi
+
+ssh -F /dev/null \
+    -i "$SSH_KEY" \
+    -p "$TV_PORT" \
+    -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    -o HostkeyAlgorithms=+ssh-rsa \
+    -o PubkeyAcceptedKeyTypes=+ssh-rsa \
+    -o LogLevel=ERROR \
+    prisoner@"$TV_IP" "$@"
