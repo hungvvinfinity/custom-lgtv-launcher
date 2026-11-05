@@ -95,6 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // 2. Initialize Clock & Date
   Clock.init();
 
+  // Signal webOS immediately that stage is ready (dismisses splash overlay in < 50ms)
+  if (window.PalmSystem) {
+    if (typeof window.PalmSystem.stageReady === 'function') {
+      window.PalmSystem.stageReady();
+    }
+    if (typeof window.PalmSystem.activate === 'function') {
+      window.PalmSystem.activate();
+    }
+  }
+
   // 3. Initialize Drawer & Luna Bus App Loading
   Drawer.init();
 

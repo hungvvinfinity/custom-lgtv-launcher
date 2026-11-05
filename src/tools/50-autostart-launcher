@@ -2,6 +2,7 @@
 # ==============================================================================
 # Auto-Start & Power-On Watcher for vn.hungvu.tvlauncher
 # Handles: Cold Boot, Standby/Suspend Resume, LG Home Suppression
+# Optimized for Ultra-Fast Startup (Zero Delay & Pre-Staging on Suspend)
 # ==============================================================================
 APP_ID="vn.hungvu.tvlauncher"
 LOG="/tmp/autostart-launcher.log"
@@ -15,33 +16,35 @@ launch_app() {
     luna-send -n 1 luna://com.webos.applicationManager/launch "{\"id\":\"$APP_ID\",\"keepAlive\":true}" >> "$LOG" 2>&1
 }
 
-# 1. COLD BOOT: Wait for SAM / WebAppMgr to be ready and launch with retry
+# 1. COLD BOOT: Fast polling loop (0.5s intervals) to launch as soon as SAM is ready
 (
     retries=0
-    max_retries=30
-    log "Cold boot start sequence initiated..."
+    max_retries=60
+    log "Cold boot fast-start sequence initiated..."
     while [ "$retries" -lt "$max_retries" ]; do
-        sleep 2
-        retries=$((retries + 1))
         res=$(luna-send -n 1 luna://com.webos.applicationManager/getForegroundAppInfo '{}' 2>/dev/null)
         if echo "$res" | grep -q '"returnValue":true'; then
-            log "SAM ready on attempt $retries. Launching launcher..."
+            log "SAM ready on attempt $retries. Launching launcher immediately..."
             launch_app
             break
         fi
+        retries=$((retries + 1))
+        sleep 0.5
     done
 ) &
 
-# 2. STANDBY / POWER RESUME: Listen for TV power state transitions to Active
+# 2. STANDBY / POWER RESUME: Instant launch on Active & Pre-stage on Suspend
 (
     last_state="Active"
-    log "Starting Power State Watcher..."
+    log "Starting Power State Watcher (Instant Resume)..."
     luna-send -i luna://com.webos.service.tvpower/power/getPowerState '{"subscribe":true}' 2>/dev/null | while read -r line; do
         state=$(echo "$line" | grep -o '"state": *"[^"]*"' | cut -d'"' -f4)
         if [ -n "$state" ]; then
             if [ "$state" = "Active" ] && [ "$last_state" != "Active" ]; then
-                log "Power resumed: $last_state -> Active. Bringing launcher to front..."
-                sleep 0.8
+                log "Power resumed ($last_state -> Active). Launching launcher INSTANTLY..."
+                launch_app
+            elif [ "$state" = "Suspend" ]; then
+                log "Power suspended. Pre-staging launcher for next resume..."
                 launch_app
             fi
             last_state="$state"

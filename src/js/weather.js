@@ -240,7 +240,7 @@ const Weather = (function () {
     }
   }
 
-  // Update Background using 2 crossfade layers
+  // Update Background using 2 crossfade layers (Only crossfade if theme actually changed)
   function updateBackgroundTheme(themeClass) {
     const layerA = document.getElementById('bg-layer-a');
     const layerB = document.getElementById('bg-layer-b');
@@ -248,8 +248,11 @@ const Weather = (function () {
 
     const fullClass = 'bg-theme-' + themeClass;
     const activeLayer = layerA.classList.contains('active') ? layerA : layerB;
-    const nextLayer = activeLayer === layerA ? layerB : layerA;
+    if (activeLayer.classList.contains(fullClass)) {
+      return; // Theme is already active, skip expensive crossfade transition
+    }
 
+    const nextLayer = activeLayer === layerA ? layerB : layerA;
     nextLayer.className = 'bg-layer ' + fullClass;
 
     setTimeout(() => {

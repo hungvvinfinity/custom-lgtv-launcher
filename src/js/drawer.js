@@ -141,7 +141,12 @@ const Drawer = (function () {
     const rawApps = await Luna.listApps();
     allAppsCache = filterApps(rawApps);
     console.log(`Drawer: Loaded ${allAppsCache.length} apps from system.`);
-    renderGrid(allAppsCache);
+    // Defer grid rendering to idle time so startup remains instantaneous
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(() => renderGrid(allAppsCache));
+    } else {
+      setTimeout(() => renderGrid(allAppsCache), 150);
+    }
   }
 
   function open() {
