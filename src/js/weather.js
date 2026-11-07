@@ -1,14 +1,31 @@
 /**
- * Weather Module - Open-Meteo Integration for Xuan Phuong, Hanoi
- * Fixed Coordinates: Lat 21.033, Lon 105.743
+ * Weather Module - Open-Meteo Integration with Dynamic Location Configuration
+ * Configurable via window.APP_CONFIG.weather or Storage.getLocation()
+ * Default Coordinates: Lat 21.033, Lon 105.743 (Xuân Phương, Hà Nội)
  * Strict 6-hour cache policy (max 4 calls/day)
  * Compact Top-Right Weather Widget with Today & Tomorrow Forecast
  */
 const Weather = (function () {
-  const LAT = 21.033;
-  const LON = 105.743;
-  const LOCATION_LABEL = 'Xuân Phương, Hà Nội';
-  const API_URL = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,is_day,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia%2FBangkok&forecast_days=3`;
+  function getLocationInfo() {
+    if (typeof Storage !== 'undefined' && typeof Storage.getLocation === 'function') {
+      return Storage.getLocation();
+    }
+    if (window.APP_CONFIG && window.APP_CONFIG.weather) {
+      return window.APP_CONFIG.weather;
+    }
+    return {
+      locationName: 'Xuân Phương, Hà Nội',
+      latitude: 21.033,
+      longitude: 105.743,
+      timezone: 'Asia/Bangkok'
+    };
+  }
+
+  function getApiUrl() {
+    const loc = getLocationInfo();
+    const tz = encodeURIComponent(loc.timezone || 'Asia/Bangkok');
+    return `https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,relative_humidity_2m,is_day,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=${tz}&forecast_days=3`;
+  }
 
   // WMO Code Translation & Theme Mapping
   function parseWmo(code, isDay) {
@@ -304,8 +321,9 @@ const Weather = (function () {
     const tomTempsEl = document.getElementById('weather-tomorrow-temps');
     const tomIconEl = document.getElementById('weather-tomorrow-icon');
 
+    const locInfo = getLocationInfo();
     if (tempEl) tempEl.textContent = '--°C';
-    if (locEl) locEl.textContent = LOCATION_LABEL;
+    if (locEl) locEl.textContent = locInfo.locationName || 'Xuân Phương, Hà Nội';
     if (descEl) descEl.textContent = 'Chưa có kết nối mạng';
     if (iconEl) iconEl.innerHTML = getSvgIcon('cloud');
     if (tomDescEl) tomDescEl.textContent = 'Chưa có dữ liệu';
@@ -349,7 +367,8 @@ const Weather = (function () {
         const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
         const timeoutId = controller ? setTimeout(() => controller.abort(), 6000) : null;
 
-        const response = await fetch(API_URL, controller ? { signal: controller.signal } : {});
+        const apiUrl = getApiUrl();
+        const response = await fetch(apiUrl, controller ? { signal: controller.signal } : {});
         if (timeoutId) clearTimeout(timeoutId);
 
         if (!response.ok) throw new Error('Network error: ' + response.status);
@@ -399,7 +418,8 @@ const Weather = (function () {
     const iconEl = document.getElementById('weather-icon');
 
     if (tempEl) tempEl.textContent = Math.round(cur.temperature_2m) + '°C';
-    if (locEl) locEl.textContent = LOCATION_LABEL;
+    const locInfo = getLocationInfo();
+    if (locEl) locEl.textContent = locInfo.locationName || 'Xuân Phương, Hà Nội';
     if (descEl) descEl.textContent = `${parsed.desc} • Độ ẩm ${cur.relative_humidity_2m}%`;
     if (iconEl) iconEl.innerHTML = getSvgIcon(parsed.icon);
 
@@ -418,11 +438,17 @@ const Weather = (function () {
     setInterval(fetchWeather, 30 * 60 * 1000);
   }
 
+  // Listen for dynamic location updates
+  window.addEventListener('weather-location-changed', () => {
+    fetchWeather();
+  });
+
   return {
     init,
     fetchWeather,
     updateBackgroundTheme,
     getSvgIcon,
+    getLocationInfo,
     parseWmo
   };
 })();

@@ -6,11 +6,18 @@ const Storage = (function () {
   const STORAGE_KEY = 'hungvu_launcher_config';
   const WEATHER_CACHE_KEY = 'hungvu_weather_cache';
   const WEATHER_LEDGER_KEY = 'hungvu_weather_ledger';
-  const DEFAULT_PINNED_APPS = [
+  const FALLBACK_DEFAULT_APPS = [
     'youtube.leanback.v4',
     'com.vtvgotv.app',
     'com.fpt.fptplay'
   ];
+
+  function getDefaultPinnedApps() {
+    if (window.APP_CONFIG && Array.isArray(window.APP_CONFIG.defaultPinnedApps) && window.APP_CONFIG.defaultPinnedApps.length > 0) {
+      return [...window.APP_CONFIG.defaultPinnedApps];
+    }
+    return [...FALLBACK_DEFAULT_APPS];
+  }
 
   // 6 Hours Cache TTL = 360 minutes = 21,600,000 milliseconds
   const WEATHER_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
@@ -28,10 +35,10 @@ const Storage = (function () {
     } catch (e) {
       console.warn('Storage: Error reading config from localStorage', e);
     }
-    // Default fallback
+    // Default fallback from user config
     return {
       schemaVersion: 1,
-      pinned_apps: [...DEFAULT_PINNED_APPS]
+      pinned_apps: getDefaultPinnedApps()
     };
   }
 
@@ -130,6 +137,46 @@ const Storage = (function () {
     return (now - last) >= WEATHER_CACHE_TTL_MS;
   }
 
+  // Location Management: Config fallback + localStorage override
+  const LOCATION_STORAGE_KEY = 'hungvu_user_location';
+  const FALLBACK_LOCATION = {
+    locationName: 'Xuân Phương, Hà Nội',
+    latitude: 21.033,
+    longitude: 105.743,
+    timezone: 'Asia/Bangkok'
+  };
+
+  function getLocation() {
+    try {
+      const raw = localStorage.getItem(LOCATION_STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.latitude && parsed.longitude) {
+          return parsed;
+        }
+      }
+    } catch (e) {}
+
+    if (window.APP_CONFIG && window.APP_CONFIG.weather && window.APP_CONFIG.weather.latitude) {
+      return Object.assign({}, FALLBACK_LOCATION, window.APP_CONFIG.weather);
+    }
+
+    return Object.assign({}, FALLBACK_LOCATION);
+  }
+
+  function setLocation(loc) {
+    try {
+      if (!loc || typeof loc.latitude !== 'number' || typeof loc.longitude !== 'number') return;
+      localStorage.setItem(LOCATION_STORAGE_KEY, JSON.stringify(loc));
+      // Invalidate weather cache to force fresh update for new location
+      localStorage.removeItem(WEATHER_CACHE_KEY);
+      localStorage.removeItem(WEATHER_LEDGER_KEY);
+      window.dispatchEvent(new CustomEvent('weather-location-changed', { detail: loc }));
+    } catch (e) {
+      console.error('Storage: Error saving custom location', e);
+    }
+  }
+
   return {
     getPinnedApps,
     setPinnedApps,
@@ -140,6 +187,9 @@ const Storage = (function () {
     getWeatherLedger,
     recordWeatherAttempt,
     isWeatherCallAllowed,
-    DEFAULT_PINNED_APPS
+    getLocation,
+    setLocation,
+    getDefaultPinnedApps,
+    DEFAULT_PINNED_APPS: getDefaultPinnedApps()
   };
 })();

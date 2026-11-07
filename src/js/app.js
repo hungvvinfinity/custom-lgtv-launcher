@@ -8,18 +8,15 @@ window.HomeRow = (function () {
 
   // Static metadata for default pins in case Luna has not loaded yet
   const STATIC_APP_INFO = {
-    'youtube.leanback.v4': {
-      title: 'YouTube',
-      icon: 'assets/app-icons/youtube.leanback.v4.png'
-    },
-    'com.vtvgotv.app': {
-      title: 'VTV Go',
-      icon: 'assets/app-icons/com.vtvgotv.app.png'
-    },
-    'com.fpt.fptplay': {
-      title: 'FPT Play',
-      icon: 'assets/app-icons/com.fpt.fptplay.png'
-    }
+    'youtube.leanback.v4': { title: 'YouTube', icon: 'assets/app-icons/youtube.leanback.v4.png' },
+    'com.vtvgotv.app': { title: 'VTV Go', icon: 'assets/app-icons/com.vtvgotv.app.png' },
+    'com.fpt.fptplay': { title: 'FPT Play', icon: 'assets/app-icons/com.fpt.fptplay.png' },
+    'netflix': { title: 'Netflix', icon: 'assets/app-icons/netflix.png' },
+    'vieplay.vn': { title: 'VieON', icon: 'assets/app-icons/vieplay.vn.png' },
+    'com.apple.appletv': { title: 'Apple TV', icon: 'assets/app-icons/com.apple.appletv.png' },
+    'com.webos.app.browser': { title: 'Trình duyệt Web', icon: 'assets/app-icons/com.webos.app.browser.png' },
+    'org.webosbrew.hbchannel': { title: 'Homebrew Channel', icon: 'assets/app-icons/org.webosbrew.hbchannel.png' },
+    'amazon': { title: 'Prime Video', icon: 'assets/app-icons/amazon.png' }
   };
 
   function render() {
