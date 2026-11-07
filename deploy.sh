@@ -5,7 +5,7 @@
 # ==============================================================================
 set -e
 
-TV_IP="${TV_IP:-192.168.1.139}"
+TV_IP="${TV_IP:-192.168.1.149}"
 TV_PORT="${TV_PORT:-22}"
 SSH_KEY="${SSH_KEY:-${HOME}/.ssh/id_ed25519}"
 APP_ID="vn.hungvu.tvlauncher"
@@ -105,6 +105,28 @@ ssh -p "$TV_PORT" -i "$SSH_KEY" -o StrictHostKeyChecking=no root@"$TV_IP" "
 
   # Start autostart daemon immediately if not running
   pgrep -f '50-autostart-launcher' >/dev/null || (/var/lib/webosbrew/init.d/50-autostart-launcher &)
+
+  # Cấu hình MemoryManager KeepAlive Policy (ngăn hệ thống kill launcher khi mở YouTube/app nặng)
+  node -e '
+    var fs = require(\"fs\");
+    var src = \"/etc/palm/memorymanager-conf.json\";
+    var dst = \"/home/root/memorymanager-conf.json\";
+    try {
+      var data;
+      try {
+        data = JSON.parse(fs.readFileSync(fs.existsSync(dst) ? dst : src, \"utf8\"));
+      } catch(e) {
+        data = JSON.parse(fs.readFileSync(src, \"utf8\"));
+      }
+      var app = \"${APP_ID}\";
+      [\"KeepOnLaunchEx\", \"HomeGroup\", \"KeepAlive\", \"NoLaunchThreshold\", \"NoLaunchThresholdLite\"].forEach(function(k) {
+        data[k] = data[k] || [];
+        if (!data[k].includes(app)) data[k].push(app);
+      });
+      fs.writeFileSync(dst, JSON.stringify(data, null, 2));
+    } catch(e) {}
+  ' 2>/dev/null || true
+  systemctl restart memchute 2>/dev/null || true
 
   # Cấu hình phím Home Magic Remote
   mkdir -p /home/root/.config/lginputhook

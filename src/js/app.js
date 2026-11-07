@@ -142,15 +142,25 @@ document.addEventListener('DOMContentLoaded', () => {
     handleLaunchParams(window.PalmSystem.launchParams);
   }
 
-  // 8. Handle webOS Lifecycle Events (Instant Relaunch & Resume)
+  // 8. Handle webOS Lifecycle Events (Instant Relaunch & Resume < 200ms)
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) {
-      console.log('App: Resumed from background. Updating clock & checking weather...');
-      if (window.PalmSystem && typeof window.PalmSystem.activate === 'function') {
-        window.PalmSystem.activate();
+      console.log('App: Resumed from background. Activating stage...');
+      if (window.PalmSystem) {
+        if (typeof window.PalmSystem.stageReady === 'function') {
+          window.PalmSystem.stageReady();
+        }
+        if (typeof window.PalmSystem.activate === 'function') {
+          window.PalmSystem.activate();
+        }
       }
       Clock.update();
-      Weather.fetchWeather();
+      // Defer weather refresh to idle time to guarantee 0ms UI focus response
+      if (typeof requestIdleCallback === 'function') {
+        requestIdleCallback(() => Weather.fetchWeather());
+      } else {
+        setTimeout(() => Weather.fetchWeather(), 200);
+      }
       if (typeof Standby !== 'undefined' && Standby.isActive()) {
         Standby.wakeUp();
       }
@@ -159,13 +169,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('webOSRelaunch', (e) => {
     console.log('App: webOSRelaunch triggered (Home key pressed). Returning to Home row...');
+    if (window.PalmSystem) {
+      if (typeof window.PalmSystem.stageReady === 'function') {
+        window.PalmSystem.stageReady();
+      }
+      if (typeof window.PalmSystem.activate === 'function') {
+        window.PalmSystem.activate();
+      }
+    }
     if (e && e.detail) {
       handleLaunchParams(e.detail);
     } else if (window.PalmSystem && window.PalmSystem.launchParams) {
       handleLaunchParams(window.PalmSystem.launchParams);
-    }
-    if (window.PalmSystem && typeof window.PalmSystem.activate === 'function') {
-      window.PalmSystem.activate();
     }
     if (typeof Standby !== 'undefined' && Standby.isActive()) {
       Standby.wakeUp();
@@ -174,10 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
       Drawer.close();
     }
     Clock.update();
-    // Focus first tile
-    setTimeout(() => {
-      const firstTile = document.querySelector('.home-row .app-tile');
-      if (firstTile) Navigation.setFocus(firstTile);
-    }, 100);
+    // Immediate tile focus
+    const firstTile = document.querySelector('.home-row .app-tile');
+    if (firstTile) Navigation.setFocus(firstTile);
   });
 });

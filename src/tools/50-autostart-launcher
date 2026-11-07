@@ -11,6 +11,30 @@ log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') [launcher] $*" >> "$LOG"
 }
 
+# 0. MEMORY POLICY PERSISTENCE: Ensure memchute never kills launcher on low memory (<200ms resume)
+if [ -f /etc/palm/memorymanager-conf.json ]; then
+    if [ ! -f /home/root/memorymanager-conf.json ] || ! grep -q "$APP_ID" /home/root/memorymanager-conf.json 2>/dev/null; then
+        log "Configuring /home/root/memorymanager-conf.json for KeepOnLaunch & Instant Switch..."
+        node -e '
+            const fs = require("fs");
+            const src = "/etc/palm/memorymanager-conf.json";
+            const dst = "/home/root/memorymanager-conf.json";
+            let data;
+            try {
+                data = JSON.parse(fs.readFileSync(fs.existsSync(dst) ? dst : src, "utf8"));
+            } catch(e) {
+                data = JSON.parse(fs.readFileSync(src, "utf8"));
+            }
+            const app = "'"$APP_ID"'";
+            ["KeepOnLaunchEx", "HomeGroup", "KeepAlive", "NoLaunchThreshold", "NoLaunchThresholdLite"].forEach(k => {
+                data[k] = data[k] || [];
+                if (!data[k].includes(app)) data[k].push(app);
+            });
+            fs.writeFileSync(dst, JSON.stringify(data, null, 2));
+        ' 2>/dev/null && systemctl restart memchute 2>/dev/null || true
+    fi
+fi
+
 launch_app() {
     log "Launching $APP_ID..."
     luna-send -n 1 luna://com.webos.applicationManager/launch "{\"id\":\"$APP_ID\",\"keepAlive\":true}" >> "$LOG" 2>&1

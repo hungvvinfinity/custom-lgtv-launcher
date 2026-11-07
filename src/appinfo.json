@@ -16,6 +16,8 @@
   "requiredMemory": 15,
   "supportGIP": true,
   "handlesRelaunch": true,
+  "noSplashOnLaunch": true,
+  "spinnerOnLaunch": false,
   "resolution": "1920x1080",
   "requiredPermissions": ["all"]
 }
