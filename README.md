@@ -1,11 +1,11 @@
 # 🚀 Custom TV Launcher for LG webOS
 
 <p align="center">
-  <img src="docs/screenshots/home-clear-day.png" alt="Custom TV Launcher - Ngày Nắng" width="900" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+  <img src="docs/screenshots/home-clear-day.png" alt="Custom TV Launcher - Sunny Day" width="900" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
 </p>
 
 <p align="center">
-  <b>Trình khởi chạy (Launcher) siêu nhẹ, tinh gọn, không quảng cáo và phản hồi tức thì (< 241ms) dành riêng cho Smart TV LG webOS.</b>
+  <b>An ultra-lightweight, ad-free, blazing-fast (< 241ms response) custom launcher tailored for rooted LG webOS Smart TVs.</b>
 </p>
 
 <p align="center">
@@ -18,111 +18,112 @@
 
 ---
 
-## 📖 Mục lục
-- [Giới thiệu](#-giới-thiệu)
-- [Bộ sưu tập giao diện (Screenshots)](#-bộ-sưu-tập-giao-diện-screenshots)
-- [Tính năng nổi bật](#-tính-năng-nổi-bật)
-- [Tùy biến Vị trí & Ứng dụng mặc định](#-tùy-biến-vị-trí--ứng-dụng-mặc-định)
-- [Chứng minh hiệu năng: Siêu tốc 241ms](#-chứng-minh-hiệu-năng-siêu-tốc-241ms)
-- [Hướng dẫn phím bấm Magic Remote](#-hướng-dẫn-phím-bấm-magic-remote)
-- [Hướng dẫn triển khai nhanh](#-hướng-dẫn-triển-khai-nhanh)
-- [Cấu trúc mã nguồn](#-cấu-trúc-mã-nguồn)
+## 📖 Table of Contents
+- [Overview](#-overview)
+- [Interface Showcase](#-interface-showcase)
+- [Key Features](#-key-features)
+- [Customizing Location & Default Apps](#-customizing-location--default-apps)
+- [Performance Benchmark: Sub-241ms Warm Switch](#-performance-benchmark-sub-241ms-warm-switch)
+- [Magic Remote Shortcuts](#-magic-remote-shortcuts)
+- [Quick Deployment Guide](#-quick-deployment-guide)
+- [Project Architecture](#-project-architecture)
+- [License & Credits](#-license--credits)
 
 ---
 
-## 🌟 Giới thiệu
+## 🌟 Overview
 
-Trên các dòng Smart TV LG webOS (đặc biệt các model cấu hình 1GB - 1.5GB RAM như `43UP7750PTB`), giao diện gốc của nhà sản xuất thường gặp phải các hạn chế lớn:
-- **Nặng nề & Chậm chạp**: Chiếm nhiều tài nguyên, thường xuyên giật lag.
-- **Nhiều quảng cáo**: Đầy rẫy banner thương mại, video đề xuất không mong muốn.
-- **Tắt ngầm khi xem YouTube / Netflix**: Hệ thống `memchute` liên tục tiêu diệt launcher gốc để nhường RAM cho ứng dụng phát video, khiến việc bấm phím **Home** trở về launcher mất từ **5 đến 7 giây** (Cold Start).
+On LG webOS Smart TVs (especially entry-level/mid-range hardware with 1GB – 1.5GB RAM such as the `43UP7750PTB` series), the stock manufacturer launcher suffers from noticeable drawbacks:
+- **Bloated & Sluggish**: Heavy resource consumption leading to UI stutter and navigation lag.
+- **Intrusive Advertisements**: Cluttered with commercial banners and sponsored content recommendations.
+- **Aggressive Background Termination**: The webOS `memchute` reaper daemon aggressively kills the launcher process whenever heavy streaming apps (such as YouTube or Netflix) decode 4K/DRM content. Returning to the home screen triggers a complete **Cold Start** that takes **5 to 7 seconds**.
 
-**Custom TV Launcher** (`vn.hungvu.tvlauncher`) được tạo ra nhằm giải quyết triệt để các vấn đề trên:
-- **Cực kỳ nhẹ**: Chiếm **dưới 12MB RAM**, CPU idle xấp xỉ **0%**.
-- **Khởi động siêu tốc**: Chuyển đổi từ YouTube / Netflix về launcher chỉ mất **214ms - 241ms** (nhanh hơn **23 lần** so với mặc định).
-- **Thuần khiết & Tối giản**: 100% sạch bóng quảng cáo, tập trung hoàn toàn vào trải nghiệm nghe nhìn và giải trí gia đình.
-
----
-
-## 📸 Bộ sưu tập giao diện (Screenshots)
-
-Launcher được trang bị **Dynamic Weather Theme Engine**, tự động thay đổi hình nền WebP Full HD và biểu tượng SVG sống động theo điều kiện thời tiết thực tế:
-
-### 1. Ngày Nắng Ấm / Trời Quang (Clear Day)
-<p align="center">
-  <img src="docs/screenshots/home-clear-day.png" alt="Màn hình chính Ngày Nắng" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
-</p>
-
-### 2. Ngày Mưa Rào / Mưa Nhẹ (Rain)
-<p align="center">
-  <img src="docs/screenshots/home-rain.png" alt="Màn hình chính Ngày Mưa" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
-</p>
-
-### 3. Ngày Dông Bão / Sấm Sét (Storm)
-<p align="center">
-  <img src="docs/screenshots/home-storm.png" alt="Màn hình chính Ngày Bão" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
-</p>
-
-### 4. Ngăn Kéo Tất Cả Ứng Dụng (All Apps Drawer Grid)
-Lưới 5 cột hiện đại, hiển thị toàn bộ app cài đặt trên TV, có badge đánh dấu ứng dụng đã ghim và thanh hướng dẫn phím bấm Magic Remote ở đáy màn hình:
-<p align="center">
-  <img src="docs/screenshots/app-drawer.png" alt="Ngăn kéo tất cả ứng dụng" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
-</p>
+**Custom TV Launcher** (`vn.hungvu.tvlauncher`) solves these problems completely:
+- **Ultra-Lightweight**: Consumes **under 12MB RAM**, with idle CPU usage near **0%**.
+- **Instant Switching**: Returning from YouTube or Netflix to the launcher takes merely **214ms – 241ms** (over **23x faster** than stock).
+- **100% Ad-Free & Clean**: Minimalist, distraction-free design focused purely on fast media navigation and comfort.
 
 ---
 
-## ✨ Tính năng nổi bật
+## 📸 Interface Showcase
 
-### ⚡ 1. Khởi động siêu nhẹ & Tối ưu chuyển đổi chỉ 241ms
-- **MemoryManager KeepAlive Override**: Khai thác cơ chế override của daemon `/usr/sbin/memchute` thông qua file cấu hình `/home/root/memorymanager-conf.json`. Đưa launcher vào các danh sách ưu tiên cao nhất của hệ điều hành: `KeepOnLaunchEx`, `HomeGroup`, `KeepAlive`, `NoLaunchThresholdLite`.
-- **Zero-lag Warm Resume**: Khi bạn mở YouTube, Netflix hay trình duyệt web, tiến trình của Launcher vẫn được bảo vệ nguyên vẹn trong RAM thay vì bị hệ thống gửi SIGKILL dọn dẹp.
-- **Triệt tiêu Splash Screen & Spinner**: Thiết lập `"noSplashOnLaunch": true` và `"spinnerOnLaunch": false` trong `appinfo.json` giúp loại bỏ hoàn toàn cửa sổ chờ đệm của Surface Application Manager.
+The launcher includes a **Dynamic Weather Theme Engine**, automatically updating Full HD WebP background scenes and vector SVG weather icons based on real-time atmospheric conditions:
 
-### 🌤️ 2. Widget Thời tiết & Dự báo thông minh
-- **Open-Meteo Integration**: Tích hợp dữ liệu thời tiết hiện tại và dự báo ngày mai trong đúng 1 request API duy nhất.
-- **Chính sách Cache 6 giờ nghiêm ngặt**: Lưu trữ an toàn trong `localStorage`, tối đa chỉ 4 lượt gọi mạng/ngày, tuyệt đối không gây tốn tài nguyên mạng và pin TV.
-- **Dynamic Weather Theme**: Tự động nhận diện mã thời tiết WMO để chuyển hình nền tương ứng (Trời quang, Nhiều mây, Mưa rào, Dông bão).
-- **Thiết kế Glassmorphism**: Kính mờ sang trọng kèm chấm beacon phát xung nhịp nhàng.
+### 1. Sunny / Clear Day
+<p align="center">
+  <img src="docs/screenshots/home-clear-day.png" alt="Sunny Day Home Screen" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
+</p>
 
-### 📌 3. Hàng ứng dụng yêu thích & Quản lý Ghim linh hoạt
-- **Home Row**: Hiển thị các ứng dụng truyền hình, giải trí mặc định (YouTube, VTV Go, FPT Play) cùng nút mở ngăn kéo tất cả ứng dụng.
-- **Ghim / Bỏ ghim tức thời**: Trong màn hình Tất cả ứng dụng, người dùng chỉ cần **giữ phím OK (800ms)** trên Magic Remote để thêm hoặc bỏ bớt ứng dụng yêu thích ra màn hình chính.
-- **Đồng bộ trạng thái**: Lưu trữ an toàn, đồng bộ trong `localStorage` (`hungvu_launcher_config`).
+### 2. Rainy Day
+<p align="center">
+  <img src="docs/screenshots/home-rain.png" alt="Rainy Day Home Screen" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
+</p>
 
-### 📱 4. Ngăn kéo Tất cả ứng dụng (All Apps Drawer)
-- **Tự động quét ứng dụng hệ thống**: Giao tiếp trực tiếp với Luna Service Bus (`luna://com.webos.applicationManager/listApps`) để liệt kê mọi app trên TV.
-- **Bộ lọc thông minh**: Tự động ẩn các tiến trình daemon chạy ngầm của hệ điều hành (`com.webos.service.*`, `com.palm.service.*`), chỉ hiển thị các ứng dụng người dùng thực thụ.
-- **Lưới CSS Grid 5 cột**: Cân đối, chuẩn tỉ lệ 10-foot UI cho màn hình TV phòng khách.
+### 3. Thunderstorm
+<p align="center">
+  <img src="docs/screenshots/home-storm.png" alt="Thunderstorm Home Screen" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
+</p>
 
-### 🛡️ 5. Hệ thống bảo vệ độ tương phản 4 lớp (Contrast Protection Engine)
-- **Lớp 1**: Ảnh nền WebP Full HD nén tối ưu (< 180 KB).
-- **Lớp 2 (Scrim Overlay)**: Lớp gradient tối đa tầng khử chói, tạo độ sâu quang học.
-- **Lớp 3 (Frosted Glass)**: Kính mờ với viền sáng `rgba(255, 255, 255, 0.16)`.
-- **Lớp 4 (Neon Glow)**: Viền phát sáng rực rỡ màu Cyan `#00F0FF` khi thẻ được focus bằng D-Pad hoặc con trỏ chuột bay Magic Remote.
-- **Lớp 5 (Typography 3D)**: Đổ bóng chữ đa hướng giúp nội dung luôn sắc nét trên mọi nền ảnh sáng tối.
-
-### 🔌 6. Tích hợp sâu hệ điều hành webOS (Deep System Integration)
-- **Autostart on Boot**: Tự khởi động launcher ngay khi bật TV thông qua cấu hình native `bootd.json` và service `/var/lib/webosbrew/init.d/50-autostart-launcher`.
-- **Hook phím cứng Magic Remote**: Bắt sự kiện phím Home vật lý (`773`, `774`, `125`) qua `lginputhook` để chuyển thẳng về launcher tùy biến.
-- **Cơ chế tự phục hồi (Self-Healing)**: Script startup tự động kiểm tra và tái thiết lập cấu hình MemoryManager sau mỗi lần khởi động TV.
+### 4. All Apps Drawer (5-Column Grid)
+Modern modal drawer displaying all installed TV applications, complete with pinned status badges and a floating remote navigation hints bar:
+<p align="center">
+  <img src="docs/screenshots/app-drawer.png" alt="All Apps Drawer" width="850" style="border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);" />
+</p>
 
 ---
 
-## ⚙️ Tùy biến Vị trí & Ứng dụng mặc định
+## ✨ Key Features
 
-Bạn có thể dễ dàng cá nhân hóa vị trí dự báo thời tiết và các ứng dụng ghim mặc định thông qua file [src/js/config.js](src/js/config.js):
+### ⚡ 1. Sub-241ms Instant App Switching
+- **MemoryManager KeepAlive Override**: Leverages native override capabilities in `/usr/sbin/memchute` via `/home/root/memorymanager-conf.json`. Registers the custom launcher under top-tier system lists: `KeepOnLaunchEx`, `HomeGroup`, `KeepAlive`, and `NoLaunchThresholdLite`.
+- **Zero-lag Warm Resume**: When streaming 4K video in YouTube, Netflix, or web browsers, the launcher renderer process remains resident in RAM instead of being killed by SIGKILL.
+- **Splash & Spinner Elimination**: Sets `"noSplashOnLaunch": true` and `"spinnerOnLaunch": false` in `appinfo.json`, bypassing the Surface Application Manager's splash window buffer.
+
+### 🌤️ 2. Smart Weather Widget & Tomorrow's Forecast
+- **Open-Meteo Integration**: Fetches current weather and tomorrow's forecast in a single lightweight API call.
+- **Strict 6-Hour Cache Policy**: Enforces quota ledger guards in `localStorage` (maximum 4 requests/day), protecting bandwidth and TV power.
+- **Dynamic Weather Theme**: Automatically maps WMO weather codes to dynamic WebP backdrop crossfades (Clear Day, Clear Night, Cloudy, Rain, Storm).
+- **Glassmorphism Styling**: Frosted glass card with real-time pulsating location beacon.
+
+### 📌 3. Pinned Favorites & Quick Pin/Unpin
+- **Home Row**: Quick access to essential channels and streaming platforms (YouTube, VTV Go, FPT Play, etc.) plus the All Apps trigger.
+- **Instant Pin / Unpin**: In the All Apps Drawer, simply **hold OK (800ms)** on your remote to pin or unpin any app to/from the Home Row.
+- **Synchronous Persistence**: Immediate state sync via `localStorage` (`hungvu_launcher_config`).
+
+### 📱 4. All Apps Modal Drawer
+- **System App Enumeration**: Interfaces directly with the Luna Service Bus (`luna://com.webos.applicationManager/listApps`).
+- **Daemon Filtering**: Intelligently hides background system services (`com.webos.service.*`, `com.palm.service.*`), presenting only user-facing TV applications.
+- **5-Column Responsive Grid**: Optimized 10-foot UI designed for living-room TV viewing distances.
+
+### 🛡️ 5. 4-Layer Contrast Protection Engine
+- **Layer 1**: Weather-reactive WebP backdrops (< 180 KB).
+- **Layer 2 (Scrim Overlay)**: Multi-stage dark gradient scrims eliminating glare.
+- **Layer 3 (Frosted Glass)**: Translucent glass containers with soft highlights.
+- **Layer 4 (Neon Glow Focus)**: Vibrant Cyan `#00F0FF` neon boundary upon D-Pad or Magic Remote pointer focus.
+- **Layer 5 (3D Typography)**: Multi-directional text shadows ensuring crisp legibility over any wallpaper brightness.
+
+### 🔌 6. Deep webOS System Integration
+- **Autostart on Boot**: Automatically boots directly into Custom Launcher via native `bootd.json` and `/var/lib/webosbrew/init.d/50-autostart-launcher`.
+- **Magic Remote Home Key Hook**: Intercepts physical Home keypresses (`773`, `774`, `125`) via `lginputhook` for instantaneous home routing.
+- **Self-Healing Daemon**: Startup script verifies and restores MemoryManager policies automatically across TV reboots.
+
+---
+
+## ⚙️ Customizing Location & Default Apps
+
+You can easily configure your weather coordinates and default pinned applications in [src/js/config.js](src/js/config.js):
 
 ```javascript
 window.APP_CONFIG = {
-  // 1. Tùy biến Vị trí Thời tiết
+  // 1. Weather Location Customization
   weather: {
-    locationName: 'Xuân Phương, Hà Nội', // Tên địa điểm hiển thị
-    latitude: 21.033,                     // Vĩ độ
-    longitude: 105.743,                    // Kinh độ
-    timezone: 'Asia/Bangkok'              // Múi giờ
+    locationName: 'Xuân Phương, Hà Nội', // Displayed city / district name
+    latitude: 21.033,                     // Latitude coordinate
+    longitude: 105.743,                    // Longitude coordinate
+    timezone: 'Asia/Bangkok'              // Local timezone string
   },
 
-  // 2. Danh sách App mặc định trên Màn hình chính (Home Row)
+  // 2. Default Pinned Applications on Home Row
   defaultPinnedApps: [
     'youtube.leanback.v4', // YouTube
     'com.vtvgotv.app',     // VTV Go
@@ -132,105 +133,106 @@ window.APP_CONFIG = {
 ```
 
 > [!TIP]
-> **Ví dụ đổi sang địa điểm khác**:
-> - **TP. Hồ Chí Minh**: `locationName: 'Quận 1, TP. Hồ Chí Minh'`, `latitude: 10.776`, `longitude: 106.700`
-> - **Đà Nẵng**: `locationName: 'Hải Châu, Đà Nẵng'`, `latitude: 16.054`, `longitude: 108.202`
+> **Examples for other locations**:
+> - **Ho Chi Minh City, Vietnam**: `locationName: 'District 1, HCMC'`, `latitude: 10.776`, `longitude: 106.700`
+> - **Tokyo, Japan**: `locationName: 'Tokyo, Japan'`, `latitude: 35.676`, `longitude: 139.650`, `timezone: 'Asia/Tokyo'`
+> - **New York, USA**: `locationName: 'New York, USA'`, `latitude: 40.712`, `longitude: -74.006`, `timezone: 'America/New_York'`
 >
-> Sau khi chỉnh sửa, chỉ cần chạy `./deploy.sh`, launcher sẽ tự động nạp vị trí mới ngay lập tức!
+> After editing the configuration, run `./deploy.sh` to update your TV instantly!
 
 ---
 
-## 📊 Chứng minh hiệu năng: Siêu tốc 241ms
+## 📊 Performance Benchmark: Sub-241ms Warm Switch
 
-Đo lường thời gian chuyển đổi thực tế từ ứng dụng **YouTube** (`youtube.leanback.v4`) về **Launcher** (`vn.hungvu.tvlauncher`) trên thiết bị LG webOS TV (SoC ARMv7l, RAM 1GB):
+Real-world benchmark measurements switching foreground from **YouTube** (`youtube.leanback.v4`) back to the **Custom Launcher** (`vn.hungvu.tvlauncher`) on an LG webOS TV (Realtek ARMv7l SoC, 1GB RAM):
 
 ```
-Trước tối ưu (Cold Start):   ████████████████████████████████████████████ 4,947 ms
-Sau tối ưu (Warm Switch):     █ 214 ms - 241 ms
+Before Optimization (Cold Start):   ████████████████████████████████████████████ 4,947 ms
+After Optimization (Warm Switch):    █ 214 ms – 241 ms
 ```
 
-| Tiêu chí | Trước khi tối ưu | Sau khi tối ưu | Hiệu quả cải thiện |
+| Metric | Before Optimization | After Optimization | Improvement |
 | :--- | :---: | :---: | :---: |
-| **Trạng thái tiến trình khi mở YouTube** | Bị `memchute` kill sạch | **Giữ thường trực trong RAM** | Không còn bị tắt ngầm |
-| **Thời gian gọi phản hồi SAM (RPC)** | 1,397 ms | **72 ms** | Nhanh hơn **19.4 lần** |
-| **Thời gian Surface Rendering** | 3,550 ms | **142 ms** | Nhanh hơn **25.0 lần** |
-| **Tổng thời gian trở về Launcher** | **4,947 ms (~5.0s)** | **214 ms - 241 ms (~0.2s)** | **Nhanh hơn ~23.1 lần (giảm 95.7% độ trễ)** |
-| **Dung lượng RAM chiếm dụng** | ~45 MB (gốc) | **< 12 MB** | Tiết kiệm **73% RAM** |
+| **Process State during YouTube Playback** | Killed by `memchute` reaper | **Kept resident in RAM** | Zero background death |
+| **SAM RPC Response Latency** | 1,397 ms | **72 ms** | **19.4x faster** |
+| **Surface Rendering & Stage Ready** | 3,550 ms | **142 ms** | **25.0x faster** |
+| **Total Return-to-Home Latency** | **4,947 ms (~5.0s)** | **214 ms – 241 ms (~0.2s)** | **~23.1x faster (95.7% latency reduction)** |
+| **Memory Footprint** | ~45 MB (stock) | **< 12 MB** | **73% RAM saved** |
 
 ---
 
-## 🎮 Hướng dẫn phím bấm Magic Remote
+## 🎮 Magic Remote Shortcuts
 
-| Phím bấm | Thao tác | Mô tả chức năng |
+| Remote Button | Gesture / Action | Functionality |
 | :--- | :--- | :--- |
-| **▲ ▼ ◀ ▶ (D-Pad)** | Nhấn các hướng | Điều hướng focus giữa các thẻ ứng dụng (hiển thị viền Cyan Neon) |
-| **OK / Con trỏ** | Nhấn nhanh | Khởi chạy ứng dụng đang chọn; hoặc mở danh sách tất cả ứng dụng |
-| **Giữ OK (800ms)** | Nhấn & giữ | **Ghim / Bỏ ghim** ứng dụng yêu thích ra ngoài Màn hình chính |
-| **Back** | Nhấn nhanh | Đóng ngăn kéo "Tất cả ứng dụng", trở về màn hình chính |
-| **Home** | Nhấn nhanh | Về màn hình chính Custom Launcher tức thì (< 241ms) |
+| **▲ ▼ ◀ ▶ (D-Pad)** | Directional Press | Move focus between tiles with smooth Cyan Neon glow |
+| **OK / Pointer Click** | Quick Press | Launch selected application or open the All Apps Drawer |
+| **Hold OK (800ms)** | Press & Hold | **Pin / Unpin** application to/from the Home Row |
+| **Back** | Quick Press | Close the All Apps Drawer and return to Home Row |
+| **Home** | Quick Press | Instantly return to Custom Launcher home (< 241ms) |
 
 ---
 
-## 🛠️ Hướng dẫn triển khai nhanh
+## 🛠️ Quick Deployment Guide
 
-### Điều kiện tiên quyết:
-- TV LG đã được Root (qua [rootmy.tv](https://rootmy.tv) hoặc [webosbrew](https://github.com/webosbrew/webos-homebrew-channel)).
-- Đã bật SSH root tại cổng 22.
+### Prerequisites:
+- LG Smart TV rooted via [rootmy.tv](https://rootmy.tv) or [webosbrew](https://github.com/webosbrew/webos-homebrew-channel).
+- SSH server enabled at root port 22.
 
-### Triển khai tự động bằng 1 lệnh:
-Script [deploy.sh](deploy.sh) thực hiện tự động toàn bộ 7 bước: cấp quyền Luna, nạp cấu hình KeepAlive MemoryManager, đồng bộ mã nguồn, cấu hình phím Home và khởi động ứng dụng:
+### 1-Command Automated Deployment:
+The [deploy.sh](deploy.sh) script automatically performs all 7 setup steps: LS2 role permissions, KeepAlive MemoryManager configuration, asset rsync, Home key hook configuration, and immediate launch:
 
 ```bash
-# Đặt biến môi trường IP của TV (mặc định 192.168.1.149)
+# Set your TV IP address (defaults to 192.168.1.149)
 export TV_IP="192.168.1.149"
 
-# Cấp quyền thực thi và chạy deploy
+# Grant execution permissions and run deployment
 chmod +x deploy.sh
 ./deploy.sh
 ```
 
 ---
 
-## 📁 Cấu trúc mã nguồn
+## 📁 Project Architecture
 
 ```text
 custom-tv-launcher/
-├── deploy.sh                  # Script triển khai tự động 7 bước & tối ưu hệ thống
-├── README.md                  # Tài liệu giới thiệu toàn bộ tính năng & hướng dẫn
-├── UNIFIED_LAUNCHER_PLAN.md   # Bản đặc tả kỹ thuật chi tiết
+├── deploy.sh                  # 7-step automated deployment and system optimization script
+├── README.md                  # Comprehensive documentation and feature guide
+├── UNIFIED_LAUNCHER_PLAN.md   # Architectural master plan and engineering specifications
 ├── docs/
-│   └── screenshots/           # Ảnh chụp màn hình Full HD
-│       ├── home-clear-day.png # Màn hình chính: Ngày nắng ấm
-│       ├── home-rain.png      # Màn hình chính: Ngày mưa
-│       ├── home-storm.png     # Màn hình chính: Ngày dông bão
-│       ├── home-screen.png    # Màn hình chính: Mặc định
-│       └── app-drawer.png     # Ngăn kéo tất cả ứng dụng
+│   └── screenshots/           # Full HD (1920x1080) interface screenshots
+│       ├── home-clear-day.png # Home screen: Sunny / Clear Day
+│       ├── home-rain.png      # Home screen: Rainy Day
+│       ├── home-storm.png     # Home screen: Thunderstorm
+│       ├── home-screen.png    # Home screen: Default twilight
+│       └── app-drawer.png     # All Apps Modal Drawer grid
 └── src/
-    ├── appinfo.json           # Cấu hình app webOS (noSplash, keepAlive, handlesRelaunch)
-    ├── index.html             # Khung DOM chuẩn Chromium 79 (0ms First Paint)
+    ├── appinfo.json           # webOS app configuration (noSplash, keepAlive, handlesRelaunch)
+    ├── index.html             # Chromium 79 optimized DOM structure (0ms First Paint)
     ├── assets/
-    │   ├── app-icons/         # Kho icon độ phân giải cao cho các ứng dụng TV
-    │   └── backgrounds/       # Hình nền WebP theo điều kiện thời tiết
+    │   ├── app-icons/         # High-resolution icons for TV applications
+    │   └── backgrounds/       # WebP backdrops for dynamic weather themes
     ├── css/
-    │   ├── main.css           # Bố cục, thẻ ứng dụng, Frosted Glass, Header
-    │   ├── contrast.css       # Hệ thống Scrim đa tầng chống chói
-    │   ├── navigation.css     # Hiệu ứng Focus Neon Glow và D-Pad matrix
-    │   └── weather-bg.css     # Hoạt ảnh chuyển nền Crossfade theo thời tiết
+    │   ├── main.css           # Grid layouts, cards, frosted glass, header typography
+    │   ├── contrast.css       # Anti-glare multi-layer scrim system
+    │   ├── navigation.css     # Focus glow states and D-Pad spatial matrix
+    │   └── weather-bg.css     # CSS crossfade transitions for weather backdrops
     ├── js/
-    │   ├── config.js          # File cấu hình tùy biến vị trí thời tiết & app mặc định
-    │   ├── app.js             # Bộ điều phối chính, Lifecycle webOSRelaunch & stageReady
-    │   ├── clock.js           # Đồng hồ điện tử & ngày tháng tiếng Việt
-    │   ├── weather.js         # API Open-Meteo, Cache 6 giờ, Dynamic WMO Theme
-    │   ├── drawer.js          # Quản lý Modal Tất cả ứng dụng, Pin/Unpin
-    │   ├── storage.js         # Lưu trữ cấu hình pins & cache trong localStorage
-    │   ├── luna.js            # Cầu nối Luna Service Bus (PalmServiceBridge)
-    │   └── navigation.js      # Hệ thống điều hướng Spatial Navigation
+    │   ├── config.js          # User configuration: weather coordinates and default apps
+    │   ├── app.js             # Core lifecycle coordinator & webOSRelaunch handler
+    │   ├── clock.js           # Digital clock & localized date formatting
+    │   ├── weather.js         # Open-Meteo API integration & 6-hour cache engine
+    │   ├── drawer.js          # All Apps modal grid manager & Pin/Unpin handler
+    │   ├── storage.js         # LocalStorage persistence & quota ledger guards
+    │   ├── luna.js            # Luna Service Bus bridge (PalmServiceBridge)
+    │   └── navigation.js      # Spatial navigation controller (D-Pad & pointer)
     └── tools/
-        └── 50-autostart-launcher  # Daemon tự khởi động & tự phục hồi Memory Policy
+        └── 50-autostart-launcher  # Autostart daemon & self-healing memory policy keeper
 ```
 
 ---
 
-## 📜 Giấy phép & Tác giả
-- Không hạn chế, tùy ý chỉnh sửa
-- Dành cho cộng đồng người dùng LG webOS TV yêu thích sự tối giản, mượt mà và tốc độ cao.
+## 📜 License & Credits
+- Created and maintained by **Hung Vu**.
+- Built for the LG webOS TV community who value minimalism, speed, and privacy.
