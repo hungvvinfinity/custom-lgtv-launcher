@@ -232,5 +232,5 @@ custom-tv-launcher/
 ---
 
 ## 📜 Giấy phép & Tác giả
-- Phát triển bởi: **Hung Vu**
+- Không hạn chế, tùy ý chỉnh sửa
 - Dành cho cộng đồng người dùng LG webOS TV yêu thích sự tối giản, mượt mà và tốc độ cao.
