@@ -236,3 +236,4 @@ custom-tv-launcher/
 ## 📜 License & Credits
 - Created and maintained by **Hung Vu**.
 - Built for the LG webOS TV community who value minimalism, speed, and privacy.
+- No License & No Restriction
