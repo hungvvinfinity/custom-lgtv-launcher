@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>TV Launcher Home</title>
+  <link rel="stylesheet" href="../../src/css/main.css">
+  <link rel="stylesheet" href="../../src/css/contrast.css">
+  <link rel="stylesheet" href="../../src/css/weather-bg.css">
+  <link rel="stylesheet" href="../../src/css/navigation.css">
+  <style>
+    .bg-theme-default {
+      background-image: url('../../src/assets/backgrounds/default.webp') !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Layer -->
+  <div class="bg-container">
+    <div id="bg-layer-a" class="bg-layer bg-theme-default active"></div>
+  </div>
+
+  <!-- Multi-Layer Contrast Protection Scrim -->
+  <div class="scrim-overlay scrim-dimmer"></div>
+  <div class="scrim-overlay scrim-vignette"></div>
+  <div class="scrim-overlay scrim-gradient"></div>
+
+  <!-- Main Canvas -->
+  <div id="app">
+    
+    <!-- Top Header -->
+    <header class="header-container">
+      
+      <!-- Clock -->
+      <div class="clock-widget">
+        <div id="clock-time" class="clock-time">
+          <span id="clock-hour">08</span><span id="clock-colon" class="clock-colon">:</span><span id="clock-min">30</span>
+        </div>
+        <div class="clock-date-pill frosted-glass">
+          <span class="date-pill-dot"></span>
+          <span id="clock-date" class="clock-date">Thứ Bảy, 07 tháng 11, 2026</span>
+        </div>
+      </div>
+
+      <!-- Weather Widget: Xuan Phuong, Hanoi (Realistic & Beautiful Fake Data) -->
+      <div class="weather-card frosted-glass">
+        <div class="weather-today-section">
+          <div id="weather-icon" class="weather-icon-large">
+            <svg viewBox="0 0 64 64" fill="none">
+              <defs>
+                <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FFF9A6" />
+                  <stop offset="45%" stop-color="#FFB800" />
+                  <stop offset="100%" stop-color="#FF6B00" />
+                </radialGradient>
+                <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="100%" stop-color="#94A3B8" />
+                </linearGradient>
+                <filter id="sunGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+              <circle cx="26" cy="24" r="13" fill="url(#sunGrad)" filter="url(#sunGlow)" />
+              <path d="M51 44H23a9 9 0 0 1-2-17.8 13 13 0 0 1 24.2-3.2A9 9 0 0 1 51 44z" fill="url(#cloudGrad)" opacity="0.95" />
+            </svg>
+          </div>
+          <div class="weather-info">
+            <div id="weather-temp" class="weather-temp">26°C</div>
+            <div class="weather-location-wrap">
+              <span class="location-beacon"></span>
+              <span id="weather-location" class="weather-location">Xuân Phương, Hà Nội</span>
+            </div>
+            <div id="weather-desc" class="weather-desc">Ít mây / Nắng nhẹ</div>
+          </div>
+        </div>
+
+        <div class="weather-divider"></div>
+
+        <div class="weather-tomorrow-section">
+          <div class="weather-tomorrow-header">
+            <span class="weather-tomorrow-badge">Ngày mai</span>
+            <span id="weather-tomorrow-date" class="weather-tomorrow-date">08/11</span>
+          </div>
+          <div class="weather-tomorrow-body">
+            <div id="weather-tomorrow-icon" class="weather-tomorrow-icon">
+              <svg viewBox="0 0 64 64" fill="none">
+                <defs>
+                  <radialGradient id="sunGradTom" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#FFF9A6" />
+                    <stop offset="45%" stop-color="#FFB800" />
+                    <stop offset="100%" stop-color="#FF6B00" />
+                  </radialGradient>
+                </defs>
+                <circle cx="32" cy="32" r="14" fill="url(#sunGradTom)" />
+                <g stroke="#FFAE00" stroke-width="2.5" stroke-linecap="round" opacity="0.9">
+                  <line x1="32" y1="8" x2="32" y2="14" />
+                  <line x1="32" y1="50" x2="32" y2="56" />
+                  <line x1="8" y1="32" x2="14" y2="32" />
+                  <line x1="50" y1="32" x2="56" y2="32" />
+                </g>
+              </svg>
+            </div>
+            <div class="weather-tomorrow-info">
+              <div id="weather-tomorrow-temps" class="weather-tomorrow-temps">
+                <span class="tomorrow-max">29°C</span>
+                <span class="tomorrow-sep">/</span>
+                <span class="tomorrow-min">20°C</span>
+              </div>
+              <div id="weather-tomorrow-desc" class="weather-tomorrow-desc">Trời quang / Nắng</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- Home Row (4 Cards Centered) -->
+    <main class="home-row-wrapper">
+      <div class="home-row-label">Ứng dụng yêu thích</div>
+      <div id="home-row" class="home-row">
+        
+        <!-- Tile 1: YouTube (Focused with Cyan Neon Glow) -->
+        <div class="app-tile focused" tabindex="0">
+          <div class="app-tile-icon-wrapper">
+            <img class="app-tile-icon" src="../../src/assets/app-icons/youtube.leanback.v4.png" alt="YouTube" />
+          </div>
+          <div class="app-tile-title">YouTube</div>
+        </div>
+
+        <!-- Tile 2: VTV Go -->
+        <div class="app-tile" tabindex="0">
+          <div class="app-tile-icon-wrapper">
+            <img class="app-tile-icon" src="../../src/assets/app-icons/com.vtvgotv.app.png" alt="VTV Go" />
+          </div>
+          <div class="app-tile-title">VTV Go</div>
+        </div>
+
+        <!-- Tile 3: FPT Play -->
+        <div class="app-tile" tabindex="0">
+          <div class="app-tile-icon-wrapper">
+            <img class="app-tile-icon" src="../../src/assets/app-icons/com.fpt.fptplay.png" alt="FPT Play" />
+          </div>
+          <div class="app-tile-title">FPT Play</div>
+        </div>
+
+        <!-- Tile 4: Tất cả ứng dụng (Hologram Neon Icon) -->
+        <div id="drawer-trigger-tile" class="app-tile drawer-trigger" tabindex="0" title="Mở danh sách tất cả ứng dụng">
+          <div class="app-tile-icon-wrapper">
+            <svg class="holo-icon" viewBox="0 0 64 64" fill="none">
+              <defs>
+                <linearGradient id="holoTileGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00F0FF" />
+                  <stop offset="50%" stop-color="#8B5CF6" />
+                  <stop offset="100%" stop-color="#EC4899" />
+                </linearGradient>
+                <filter id="holoTileGlow" x="-25%" y="-25%" width="150%" height="150%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+              <rect x="8" y="8" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+              <rect x="25.5" y="8" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+              <rect x="43" y="8" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+              <rect x="8" y="25.5" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+              <rect x="25.5" y="25.5" width="13" height="13" rx="4" fill="#FFFFFF" filter="url(#holoTileGlow)" />
+              <rect x="43" y="25.5" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+              <rect x="8" y="43" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+              <rect x="25.5" y="43" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+              <rect x="43" y="43" width="13" height="13" rx="4" fill="url(#holoTileGrad)" />
+            </svg>
+          </div>
+          <div class="app-tile-title">Tất cả ứng dụng</div>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+</body>
+</html>
